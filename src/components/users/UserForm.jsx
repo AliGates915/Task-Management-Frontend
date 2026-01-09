@@ -79,6 +79,9 @@ const UserForm = ({ user, onSubmit, onCancel, companies, currentUser }) => {
     availableRoles.push('staff');
   }
 
+  console.log("companies ", companies);
+  
+
   // Available companies for admin
   const availableCompanies = currentUser.role === 'admin' ? companies : [];
 

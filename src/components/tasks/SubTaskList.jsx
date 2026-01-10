@@ -72,16 +72,20 @@ const SubTaskList = ({
         );
     };
 
-    const handleStatusChange = (subTaskId, newStatus) => {
-        if (onUpdateSubTask) {
-            // Call the update function but don't wait for it
-            onUpdateSubTask(taskId, subTaskId, { status: newStatus });
-
-            // Immediately reload the page
+   const handleStatusChange = async (subTaskId, newStatus) => {
+    if (onUpdateSubTask) {
+        try {
+            // Wait for the update to complete before reloading
+            await onUpdateSubTask(taskId, subTaskId, { status: newStatus });
+            // Only reload after successful update
             window.location.reload();
+        } catch (error) {
+            console.error('Failed to update subtask status:', error);
+            // Optionally show an error message to the user
+            alert('Failed to update subtask status. Please try again.');
         }
-    };
-
+    }
+};
     const handleEditClick = (subTask) => {
         setEditingSubTask(subTask);
         setShowEditModal(true);

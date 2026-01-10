@@ -91,12 +91,19 @@ const TaskForm = ({ onSubmit, onCancel, userRole, companyId, initialData }) => {
     }
   };
 
-  // Filter users based on role
-  const filteredUsers = users.filter(user => {
-    if (userRole === 'admin') return true;
-    if (userRole === 'manager') return user.role === 'staff';
-    return false;
-  });
+const filteredUsers = users.filter(user => {
+    if (userRole === 'admin') {
+  
+       return user.role !== 'admin';
+    } else if (userRole === 'manager') {
+        // Manager can see only staff, exclude admin & manager
+        return user.role === 'staff';
+    } else {
+        // Staff cannot see anyone else
+        return false;
+    }
+});
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

@@ -22,11 +22,17 @@ const Users = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const filteredUsers = users.filter(user =>
+  // console.log("users ", users);
+  
+const filteredUsers = users.filter(user =>
+  user.role !== 'admin' &&
+  (
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
+);
+
 
   const handleCreateUser = async (userData) => {
     try {

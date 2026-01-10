@@ -18,19 +18,7 @@ const Header = ({ setSidebarOpen }) => {
       </button>
       <div className="flex-1 px-4 flex justify-between">
         <div className="flex-1 flex">
-          <div className="w-full flex md:ml-0">
-            <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-              <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                {/* Search icon */}
-              </div>
-              <input
-                className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                placeholder="Search tasks, users, reports..."
-                type="search"
-                name="search"
-              />
-            </div>
-          </div>
+          
         </div>
         <div className="ml-4 flex items-center md:ml-6">
           <button

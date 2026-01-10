@@ -103,17 +103,6 @@ export const updateTaskStatus = createAsyncThunk(
   }
 );
 
-export const fetchDashboardStats = createAsyncThunk(
-  'tasks/fetchDashboardStats',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await taskService.getDashboardStats();
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch dashboard stats');
-    }
-  }
-);
 
 export const fetchReport = createAsyncThunk(
   'tasks/fetchReport',
@@ -242,18 +231,6 @@ const taskSlice = createSlice({
       .addCase(createTask.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-      })
-      
-      // Dashboard Stats
-      .addCase(fetchDashboardStats.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchDashboardStats.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.dashboardStats = action.payload;
-      })
-      .addCase(fetchDashboardStats.rejected, (state) => {
-        state.isLoading = false;
       })
       
       // Fetch Report

@@ -111,7 +111,7 @@ const Reports = () => {
   const detailed = report?.detailed || [];
   const userReports = report?.userReports || [];
   const chartData = report?.chartData || [];
-  console.log("jjjj", reportData?.report?.chartData);
+  // console.log("jjjj", reportData?.report?.chartData);
 
 
   return (

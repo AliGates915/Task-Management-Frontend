@@ -21,7 +21,7 @@ const Companies = () => {
     dispatch(fetchCompanies());
   }, [dispatch]);
 
-  console.log("companies ", companies);
+  // console.log("companies ", companies);
   
   const filteredCompanies = companies.filter(company =>
     company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

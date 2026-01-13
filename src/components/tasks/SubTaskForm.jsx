@@ -15,12 +15,15 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [userRole, setUserRole] = useState('');
+  const [isManager, setIsManager] = useState(false);
+  const [loadingRole, setLoadingRole] = useState(true);
 
   // Set default date
   useEffect(() => {
     if (!formData.date && task) {
       const getDateOnly = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
-      
+
       const today = getDateOnly(new Date());
       const taskStart = getDateOnly(task.startDate);
       const taskEnd = getDateOnly(task.endDate);
@@ -39,6 +42,27 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
     return date.toISOString().split('T')[0];
   };
 
+  useEffect(() => {
+    const getUserRole = () => {
+      try {
+        const userDataStr = localStorage.getItem('user');
+        if (!userDataStr) return '';
+
+        const userData = JSON.parse(userDataStr);
+        const role = userData?.role || '';
+        return typeof role === 'string' ? role.trim().toLowerCase() : '';
+      } catch (error) {
+        console.error('Error getting user role:', error);
+        return '';
+      }
+    };
+
+    const role = getUserRole();
+    setUserRole(role);
+    setIsManager(role === 'staff');
+    setLoadingRole(false);
+  }, []);
+
   const validate = () => {
     const newErrors = {};
 
@@ -49,7 +73,7 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
       const selectedDateOnly = getDateOnly(formData.date);
       const startDateOnly = getDateOnly(task.startDate);
       const endDateOnly = getDateOnly(task.endDate);
-      
+
       if (selectedDateOnly < startDateOnly) {
         newErrors.date = 'Date cannot be before task start date';
       }
@@ -74,9 +98,9 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     console.log('Form data before validation:', formData);
-    
+
     if (validate()) {
       // Ensure date is in YYYY-MM-DD format
       const submissionData = {
@@ -85,7 +109,7 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
         description: formData.description.trim(),
         hoursSpent: Number(formData.hoursSpent) || 0
       };
-      
+
       console.log('Submitting data:', submissionData);
       onSubmit(submissionData);
     } else {
@@ -106,6 +130,9 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
     }
   };
 
+  const canPerformActions = (userRole === 'manager' || userRole === 'admin') && !isManager;
+
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,9 +147,8 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className={`w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                errors.date ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full pl-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${errors.date ? 'border-red-500' : 'border-gray-300'
+                }`}
               min={task ? new Date(task.startDate).toISOString().split('T')[0] : ''}
               max={task ? new Date(task.endDate).toISOString().split('T')[0] : ''}
             />
@@ -144,9 +170,8 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
             min="0"
             max="24"
             step="0.5"
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-              errors.hoursSpent ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${errors.hoursSpent ? 'border-red-500' : 'border-gray-300'
+              }`}
             placeholder="0"
           />
           {errors.hoursSpent && (
@@ -164,9 +189,8 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
           value={formData.description}
           onChange={handleChange}
           rows="3"
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-            errors.description ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
+            }`}
           placeholder="What needs to be done on this day?"
         />
         {errors.description && (
@@ -187,23 +211,24 @@ const SubTaskForm = ({ onSubmit, onCancel, task, initialData }) => {
           placeholder="Any additional notes or comments..."
         />
       </div>
+      {canPerformActions &&
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Status
+          </label>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="delayed">Delayed</option>
+          </select>
+        </div>}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Status
-        </label>
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-        >
-          <option value="pending">Pending</option>
-          <option value="in-progress">In Progress</option>
-          <option value="completed">Completed</option>
-          <option value="delayed">Delayed</option>
-        </select>
-      </div>
 
       <div className="flex justify-end space-x-3 pt-2">
         <button

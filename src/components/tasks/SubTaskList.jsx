@@ -107,17 +107,7 @@ const SubTaskList = ({
         );
     };
 
-    const handleStatusChange = async (subTaskId, newStatus) => {
-        if (onUpdateSubTask && !isManager) {
-            try {
-                await onUpdateSubTask(taskId, subTaskId, { status: newStatus });
-                window.location.reload(); // Reload after update
-            } catch (error) {
-                console.error('Failed to update subtask status:', error);
-                alert('Failed to update subtask status. Please try again.');
-            }
-        }
-    };
+
 
     const handleEditClick = (subTask) => {
         if (!isManager) {
@@ -258,10 +248,7 @@ const SubTaskList = ({
                                                         <div className="flex items-center justify-between mb-2">
                                                             <div className="flex items-center space-x-3">
                                                                 <button
-                                                                    onClick={() => handleStatusChange(
-                                                                        subTask._id,
-                                                                        subTask.status === 'completed' ? 'pending' : 'completed'
-                                                                    )}
+                                                                   
                                                                     disabled={isManager}
                                                                     className={isManager ? 'cursor-not-allowed opacity-50' : ''}
                                                                 >

@@ -89,14 +89,7 @@ const Header = ({ setSidebarOpen }) => {
                   >
                     Profile
                   </Link>
-                  {/* Add other menu items if needed */}
-                  {/* <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Settings
-                  </Link> */}
+                  
                 </div>
                 <div className="py-1">
                   <button

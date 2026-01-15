@@ -170,10 +170,14 @@ const Profile = () => {
                         <ShieldCheckIcon className="h-5 w-5 mr-3 text-blue-500" />
                         <span className="capitalize font-medium">{user?.role}</span>
                       </div>
-                      <div className="flex items-center justify-center sm:justify-start text-gray-600 bg-gray-50 w-fit px-4 py-2 rounded-lg mx-auto sm:mx-0">
-                        <BuildingOfficeIcon className="h-5 w-5 mr-3 text-gray-400" />
-                        <span className="font-medium">{getCompanyName()}</span>
-                      </div>
+                     {
+                      user?.role !== "admin" && (
+                        <div className="flex items-center justify-center sm:justify-start text-gray-600 bg-gray-50 w-fit px-4 py-2 rounded-lg mx-auto sm:mx-0">
+                          <BuildingOfficeIcon className="h-5 w-5 mr-3 text-green-500" />
+                          <span className="font-medium">{getCompanyName()}</span>
+                        </div>
+                      )
+                     }
                     </div>
                   </>
                 )}
